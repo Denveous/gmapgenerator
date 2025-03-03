@@ -13,6 +13,6 @@ This project is based around the initial code from Crow over on the [forums](htt
 
 ### Prerequisites
 
-- [.NET Framework 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET Runtime 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
 
 

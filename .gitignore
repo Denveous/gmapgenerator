@@ -222,6 +222,7 @@ _pkginfo.txt
 *.appx
 *.appxbundle
 *.appxupload
+graal.ico
 
 # Visual Studio cache files
 # files ending in .cache can be ignored
@@ -231,6 +232,7 @@ _pkginfo.txt
 
 # Others
 ClientBin/
+bin/
 ~$*
 *~
 *.dbmdl

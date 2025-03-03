@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="graal.ico" type="image/x-icon">
     <title>Gmap Generator</title>
     <style>
         body {
@@ -118,7 +117,7 @@
             // Validate inputs
             if (!prefix || isNaN(width) || isNaN(height) || isNaN(centerX) || isNaN(centerY)) {
                 outputDiv.innerHTML = '<span class="error">Please enter valid numeric values and a prefix.</span>';
-                return
+                return;
             }
             if (width < 2 || height < 2 || centerX < 1 || centerY < 1) {
                 outputDiv.innerHTML = '<span class="error">The specified map size is too small!</span>';

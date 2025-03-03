@@ -6,21 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>graal.ico</ApplicationIcon>
+    <ApplicationIcon>gmapgen.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="graal.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="graal.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="graal.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <Content Include="gmapgen.ico" />
   </ItemGroup>
 
 </Project>
