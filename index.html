@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmap Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #323232;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+        input[type="checkbox"] {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #444;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .output {
+            margin-top: 20px;
+            color: limegreen;
+        }
+        .error {
+            color: tomato;
+        }
+        .credits {
+            font-style: italic;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <h1>Gmap Generator</h1>
+    <label for="prefix">Prefix:</label>
+    <input type="text" id="prefix">
+
+    <label for="width">Width:</label>
+    <input type="number" id="width" value="2">
+
+    <label for="height">Height:</label>
+    <input type="number" id="height" value="2">
+
+    <label for="centerX">Center X:</label>
+    <input type="number" id="centerX" value="1">
+
+    <label for="centerY">Center Y:</label>
+    <input type="number" id="centerY" value="1">
+
+    <label>
+        <input type="checkbox" id="addLinks"> Add level links
+    </label>
+
+    <label for="templateFile">Template File (optional):</label>
+    <input type="file" id="templateFile" accept=".nw">
+
+    <button id="clearTemplateBtn">Clear Template</button>
+    <button id="generateBtn">Generate</button>
+
+    <div id="output" class="output">Click 'Generate' to create your Gmap!</div>
+    <div class="credits">Concept by Crow, updated by Denveous</div>
+
+    <script>
+        let templateContent = '';
+
+        document.getElementById('templateFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    templateContent = e.target.result; // Store the template content
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        document.getElementById('clearTemplateBtn').addEventListener('click', function() {
+            document.getElementById('templateFile').value = ''; // Clear the file input
+            templateContent = ''; // Reset the template content
+        });
+
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const prefix = document.getElementById('prefix').value;
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const centerX = parseInt(document.getElementById('centerX').value);
+            const centerY = parseInt(document.getElementById('centerY').value);
+            const addLinks = document.getElementById('addLinks').checked;
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = ''; // Clear previous output
+
+            // Validate inputs
+            if (!prefix || isNaN(width) || isNaN(height) || isNaN(centerX) || isNaN(centerY)) {
+                outputDiv.innerHTML = '<span class="error">Please enter valid numeric values and a prefix.</span>';
+                return
+            }
+            if (width < 2 || height < 2 || centerX < 1 || centerY < 1) {
+                outputDiv.innerHTML = '<span class="error">The specified map size is too small!</span>';
+                return;
+            }
+
+            // Prepare the GMAP file content
+            let gmapContent = `GRMAP001\nWIDTH ${width}\nHEIGHT ${height}\nLEVELNAMES\n`;
+            const zip = new JSZip();
+
+            // Create levels
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const levelName = `${prefix}_${getCoords(x + 1, y + 1, centerX, centerY)}.nw`;
+                    gmapContent += `"${levelName}"${(x < width - 1 ? "," : "")}`;
+
+                    // Create the level content
+                    const levelContent = getLevelContent(x + 1, y + 1, addLinks, prefix, centerX, centerY, templateContent);
+                    zip.file(levelName, levelContent); // Add level file to zip
+                }
+                gmapContent += "\n";
+            }
+
+            // Finish the GMAP file
+            gmapContent += "LEVELNAMESEND\n";
+            zip.file(`${prefix}.gmap`, gmapContent); // Add GMAP file to zip
+
+            // Generate the zip file and trigger download
+            zip.generateAsync({ type: "blob" }).then(function(content) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `${prefix}.zip`;
+                link.click();
+            });
+
+            // Success message
+            outputDiv.innerHTML = 'Gmap created successfully! The files have been zipped and are ready for download.';
+        });
+
+        function getCoords(x, y, centerX, centerY) {
+            let xs, ys;
+
+            if (x >= centerX) {
+                xs = (x - centerX).toString().padStart(2, '0');
+            } else {
+                const i = centerX - x - 1;
+                xs = `${String.fromCharCode(97 + Math.floor(i / 26))}${String.fromCharCode(97 + (i % 26))}`;
+            }
+
+            if (y >= centerY) {
+                ys = (y - centerY).toString().padStart(2, '0');
+            } else {
+                const i = centerY - y - 1;
+                ys = `${String.fromCharCode(97 + Math.floor(i / 26))}${String.fromCharCode(97 + (i % 26))}`;
+            }
+
+            return `${xs}-${ys}`;
+        }
+
+        function getLevelContent(x, y, addLinks, prefix, centerX, centerY, templateContent) {
+            let levelContent = `GLEVNW01\n`;
+
+            // If a template is provided, use it; otherwise, generate default content
+            if (templateContent) {
+                levelContent += templateContent; // Use the template content
+            } else {
+                // Generate BOARD lines with the specified f values
+                const fValues = 'f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/';
+                
+                for (let i = 0; i < 64; i++) {
+                    levelContent += `BOARD 0 ${i} 64 0 ${fValues}\n`;
+                }
+            }
+
+            if (addLinks) {
+                levelContent += getLinks(x, y, prefix, centerX, centerY);
+            }
+
+            return levelContent;
+        }
+
+        function getLinks(x, y, prefix, centerX, centerY) {
+            let links = '';
+
+            if (x > 1) {
+                links += `LINK ${prefix}_${getCoords(x - 1, y, centerX, centerY)}.nw 0 0 1 64 61 playery\n`;
+            }
+            if (x < parseInt(document.getElementById('width').value)) {
+                links += `LINK ${prefix}_${getCoords(x + 1, y, centerX, centerY)}.nw 63 0 1 64 0 playery\n`;
+            }
+            if (y > 1) {
+                links += `LINK ${prefix}_${getCoords(x, y - 1, centerX, centerY)}.nw 0 0 64 1 playerx 61\n`;
+            }
+            if (y < parseInt(document.getElementById('height').value)) {
+                links += `LINK ${prefix}_${getCoords(x, y + 1, centerX, centerY)}.nw 0 63 64 1 playerx 0\n`;
+            }
+
+            return links;
+        }
+    </script>
+</body>
+</html>
