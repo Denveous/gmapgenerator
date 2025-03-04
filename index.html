@@ -76,9 +76,17 @@
         <input type="checkbox" id="addLinks"> Add level links
     </label>
 
+    <label>Level Format:</label>
+    <label>
+        <input type="radio" name="levelFormat" value="numbered" checked> Numbered (00_01)
+    </label>
+    <label>
+        <input type="radio" name="levelFormat" value="lettered"> Lettered (aa_aa)
+    </label>
+    <br />
     <label for="templateFile">Template File (optional):</label>
     <input type="file" id="templateFile" accept=".nw">
-
+    <br /><br />
     <button id="clearTemplateBtn">Clear Template</button>
     <button id="generateBtn">Generate</button>
 
@@ -88,23 +96,23 @@
     <script>
         let templateContent = '';
 
-        document.getElementById('templateFile').addEventListener('change', function(event) {
+        document.getElementById('templateFile').addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     templateContent = e.target.result; // Store the template content
                 };
                 reader.readAsText(file);
             }
         });
 
-        document.getElementById('clearTemplateBtn').addEventListener('click', function() {
+        document.getElementById('clearTemplateBtn').addEventListener('click', function () {
             document.getElementById('templateFile').value = ''; // Clear the file input
             templateContent = ''; // Reset the template content
         });
 
-        document.getElementById('generateBtn').addEventListener('click', function() {
+        document.getElementById('generateBtn').addEventListener('click', function () {
             const prefix = document.getElementById('prefix').value;
             const width = parseInt(document.getElementById('width').value);
             const height = parseInt(document.getElementById('height').value);
@@ -120,7 +128,7 @@
                 outputDiv.innerHTML = '<span class="error">Please enter valid numeric values and a prefix.</span>';
                 return;
             }
-            if (width < 2 || height < 2 || centerX < 1 || centerY < 1) {
+            if (width < 1 || height < 1 || centerX < 1 || centerY < 1) {
                 outputDiv.innerHTML = '<span class="error">The specified map size is too small!</span>';
                 return;
             }
@@ -129,10 +137,13 @@
             let gmapContent = `GRMAP001\nWIDTH ${width}\nHEIGHT ${height}\nLEVELNAMES\n`;
             const zip = new JSZip();
 
+            // Determine the selected level format
+            const levelFormat = document.querySelector('input[name="levelFormat"]:checked').value;
+
             // Create levels
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
-                    const levelName = `${prefix}_${getCoords(x + 1, y + 1, centerX, centerY)}.nw`;
+                    const levelName = `${prefix}_${getCoords(x + 1, y + 1, centerX, centerY, levelFormat)}.nw`;
                     gmapContent += `"${levelName}"${(x < width - 1 ? "," : "")}`;
 
                     // Create the level content
@@ -147,7 +158,7 @@
             zip.file(`${prefix}.gmap`, gmapContent); // Add GMAP file to zip
 
             // Generate the zip file and trigger download
-            zip.generateAsync({ type: "blob" }).then(function(content) {
+            zip.generateAsync({ type: "blob" }).then(function (content) {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
                 link.download = `${prefix}.zip`;
@@ -158,25 +169,33 @@
             outputDiv.innerHTML = 'Gmap created successfully! The files have been zipped and are ready for download.';
         });
 
-        function getCoords(x, y, centerX, centerY) {
+        function getCoords(x, y, centerX, centerY, levelFormat) {
             let xs, ys;
 
-            if (x >= centerX) {
-                xs = (x - centerX).toString().padStart(2, '0');
+            if (levelFormat === 'numbered') {
+                // Numbered format (e.g., 00-01)
+                xs = (x >= centerX) ? (x - centerX).toString().padStart(2, '0') : (centerX - x - 1).toString().padStart(2, '0');
+                ys = (y >= centerY) ? (y - centerY).toString().padStart(2, '0') : (centerY - y - 1).toString().padStart(2, '0');
             } else {
-                const i = centerX - x - 1;
-                xs = `${String.fromCharCode(97 + Math.floor(i / 26))}${String.fromCharCode(97 + (i % 26))}`;
-            }
+                // Double lettered format (e.g., aa, ab, ac, ..., zz)
+                const xIndex = (x - 1); 
+                const yIndex = (y - 1);
 
-            if (y >= centerY) {
-                ys = (y - centerY).toString().padStart(2, '0');
-            } else {
-                const i = centerY - y - 1;
-                ys = `${String.fromCharCode(97 + Math.floor(i / 26))}${String.fromCharCode(97 + (i % 26))}`;
+                const firstLetter = String.fromCharCode(97 + Math.floor(xIndex / 26)); // 'a' is 97 in ASCII
+                const secondLetter = String.fromCharCode(97 + (xIndex % 26));
+
+                xs = `${firstLetter}${secondLetter}`;
+
+                const firstLetterY = String.fromCharCode(97 + Math.floor(yIndex / 26));
+                const secondLetterY = String.fromCharCode(97 + (yIndex % 26));
+
+                ys = `${firstLetterY}${secondLetterY}`;
             }
 
             return `${xs}-${ys}`;
         }
+
+
 
         function getLevelContent(x, y, addLinks, prefix, centerX, centerY, templateContent) {
             let levelContent = `GLEVNW01\n`;
@@ -187,7 +206,7 @@
             } else {
                 // Generate BOARD lines with the specified f values
                 const fValues = 'f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/';
-                
+
                 for (let i = 0; i < 64; i++) {
                     levelContent += `BOARD 0 ${i} 64 0 ${fValues}\n`;
                 }

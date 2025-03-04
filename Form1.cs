@@ -21,7 +21,6 @@ namespace GmapGenerator
             InitializeComponent();
         }
         private void btnGenerate_Click(object sender, EventArgs e) {
-            // Clear previous output
             lblOutput.Text = string.Empty;
 
             string prefix = txtPrefix.Text;
@@ -33,7 +32,7 @@ namespace GmapGenerator
                 lblOutput.ForeColor = System.Drawing.Color.Tomato;
                 return;
             }
-            if (width < 2 || height < 2 || centerX < 1 || centerY < 1)
+            if (width < 1 || height < 1 || centerX < 1 || centerY < 1)
             {
                 lblOutput.Text = "The specified map size is too small!";
                 lblOutput.ForeColor = System.Drawing.Color.Tomato; 
