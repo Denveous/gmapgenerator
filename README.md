@@ -15,6 +15,6 @@ This project is based around the initial code from Crow over on the [forums](htt
 
 ### Prerequisites
 
-- [.NET Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-8.0.13-windows-x64-installer)
+- [.NET Runtime 6.0](https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/6.0.36/windowsdesktop-runtime-6.0.36-win-x64.exe)
 
 
