@@ -13,6 +13,7 @@ namespace GmapGenerator
             txtHeight.Text = "2"; 
             txtCenterX.Text = "1";
             txtCenterY.Text = "1"; 
+            formatOpt1.Checked = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.AutoSize = false;
         }
@@ -85,28 +86,40 @@ namespace GmapGenerator
         {
             string xs, ys;
 
-            if (x >= int.Parse(txtCenterX.Text))
-            {
-                xs = (x - int.Parse(txtCenterX.Text)).ToString().PadLeft(2, '0');
-            }
-            else
-            {
-                int i = int.Parse(txtCenterX.Text) - x - 1;
-                xs = $"{(char)(97 + (i / 26))}{(char)(97 + (i % 26))}";
-            }
+            // Determine the selected format
+            bool isNumbered = formatOpt1.Checked; // Assuming formatOpt1 is the numbered radio button
 
-            if (y >= int.Parse(txtCenterY.Text))
+            if (isNumbered)
             {
-                ys = (y - int.Parse(txtCenterY.Text)).ToString().PadLeft(2, '0');
+                // Numbered format (e.g., 00-01)
+                xs = (x >= int.Parse(txtCenterX.Text)) ? 
+                    (x - int.Parse(txtCenterX.Text)).ToString().PadLeft(2, '0') : 
+                    (int.Parse(txtCenterX.Text) - x - 1).ToString().PadLeft(2, '0');
+
+                ys = (y >= int.Parse(txtCenterY.Text)) ? 
+                    (y - int.Parse(txtCenterY.Text)).ToString().PadLeft(2, '0') : 
+                    (int.Parse(txtCenterY.Text) - y - 1).ToString().PadLeft(2, '0');
             }
             else
             {
-                int i = int.Parse(txtCenterY.Text) - y - 1;
-                ys = $"{(char)(97 + (i / 26))}{(char)(97 + (i % 26))}";
+                // Double lettered format (e.g., aa, ab, ac, ..., zz)
+                int xIndex = x - 1; 
+                int yIndex = y - 1; 
+
+                char firstLetterX = (char)(97 + (xIndex / 26)); // 'a' is 97 in ASCII
+                char secondLetterX = (char)(97 + (xIndex % 26));
+
+                xs = $"{firstLetterX}{secondLetterX}";
+
+                char firstLetterY = (char)(97 + (yIndex / 26));
+                char secondLetterY = (char)(97 + (yIndex % 26));
+
+                ys = $"{firstLetterY}{secondLetterY}";
             }
 
             return $"{xs}-{ys}";
         }
+
 
         // Method to get the content of a level file
         private string GetLevelContent(int x, int y)

@@ -31,6 +31,9 @@ namespace GmapGenerator
             btnGenerate = new Button();
             lblOutput = new Label();
             lblCredits = new Label();
+            formatOpt1 = new RadioButton();
+            lblFormat = new Label();
+            formatOpt2 = new RadioButton();
             SuspendLayout();
             // 
             // lblPrefix
@@ -154,10 +157,10 @@ namespace GmapGenerator
             // 
             btnGenerate.BackColor = Color.FromArgb(70, 70, 70);
             btnGenerate.ForeColor = Color.White;
-            btnGenerate.Location = new Point(152, 355);
+            btnGenerate.Location = new Point(152, 465);
             btnGenerate.Margin = new Padding(4, 5, 4, 5);
             btnGenerate.Name = "btnGenerate";
-            btnGenerate.Size = new Size(107, 38);
+            btnGenerate.Size = new Size(107, 43);
             btnGenerate.TabIndex = 11;
             btnGenerate.Text = "Generate";
             btnGenerate.UseVisualStyleBackColor = false;
@@ -166,9 +169,9 @@ namespace GmapGenerator
             // lblOutput
             // 
             lblOutput.ForeColor = Color.White;
-            lblOutput.Location = new Point(27, 305);
+            lblOutput.Location = new Point(27, 415);
             lblOutput.Name = "lblOutput";
-            lblOutput.Size = new Size(373, 37);
+            lblOutput.Size = new Size(373, 42);
             lblOutput.TabIndex = 12;
             lblOutput.Text = "Click 'Generate' to create your Gmap!";
             lblOutput.TextAlign = ContentAlignment.MiddleCenter;
@@ -178,19 +181,59 @@ namespace GmapGenerator
             lblCredits.AutoSize = true;
             lblCredits.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Italic);
             lblCredits.ForeColor = Color.White;
-            lblCredits.Location = new Point(28, 409);
+            lblCredits.Location = new Point(28, 519);
             lblCredits.Margin = new Padding(4, 0, 4, 0);
             lblCredits.Name = "lblCredits";
             lblCredits.Size = new Size(364, 25);
             lblCredits.TabIndex = 13;
             lblCredits.Text = "Concept by Crow, updated by Denveous";
             // 
+            // formatOpt1
+            // 
+            formatOpt1.AutoSize = true;
+            formatOpt1.ForeColor = Color.White;
+            formatOpt1.Location = new Point(152, 342);
+            formatOpt1.Name = "formatOpt1";
+            formatOpt1.Size = new Size(189, 29);
+            formatOpt1.TabIndex = 14;
+            formatOpt1.TabStop = true;
+            formatOpt1.Text = "Numbered (00-01) ";
+            formatOpt1.UseVisualStyleBackColor = true;
+            // 
+            // lblFormat
+            // 
+            lblFormat.AutoSize = true;
+            lblFormat.ForeColor = Color.White;
+            lblFormat.Location = new Point(95, 313);
+            lblFormat.Margin = new Padding(4, 0, 4, 0);
+            lblFormat.Name = "lblFormat";
+            lblFormat.Size = new Size(117, 25);
+            lblFormat.TabIndex = 15;
+            lblFormat.Text = "Level Suffix Format:";
+            // 
+            // formatOpt2
+            // 
+            formatOpt2.AutoSize = true;
+            formatOpt2.ForeColor = Color.White;
+            formatOpt2.Location = new Point(152, 377);
+            formatOpt2.Name = "formatOpt2";
+            formatOpt2.Size = new Size(164, 29);
+            formatOpt2.TabIndex = 16;
+            formatOpt2.TabStop = true;
+            formatOpt2.Text = "Lettered (aa-aa) ";
+            formatOpt2.UseVisualStyleBackColor = true;
+
+  
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(423, 443);
+            ClientSize = new Size(423, 562);
+            Controls.Add(formatOpt2);
+            Controls.Add(lblFormat);
+            Controls.Add(formatOpt1);
             Controls.Add(lblCredits);
             Controls.Add(lblOutput);
             Controls.Add(btnGenerate);
@@ -228,5 +271,8 @@ namespace GmapGenerator
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Label lblOutput;
         private System.Windows.Forms.Label lblCredits;
+        private RadioButton formatOpt1;
+        private Label lblFormat;
+        private RadioButton formatOpt2;
     }
 }
