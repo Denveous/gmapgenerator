@@ -14,10 +14,7 @@ namespace GmapGenerator
             txtCenterX.Text = "1";
             txtCenterY.Text = "1"; 
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Size = new System.Drawing.Size(445, 499);
-            this.MinimumSize = new System.Drawing.Size(445, 499);
             this.AutoSize = false;
-
         }
         public Form1()
         {
