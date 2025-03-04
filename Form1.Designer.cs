@@ -230,7 +230,7 @@ namespace GmapGenerator
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(423, 562);
+            ClientSize = new Size(445, 618);
             Controls.Add(formatOpt2);
             Controls.Add(lblFormat);
             Controls.Add(formatOpt1);
