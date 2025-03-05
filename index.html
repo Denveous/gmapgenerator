@@ -19,7 +19,7 @@
         input[type="text"],
         input[type="number"],
         input[type="file"] {
-            width: 100%;
+            width: 50%;
             padding: 10px;
             background-color: #323232;
             color: white;
@@ -57,42 +57,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
-    <label for="prefix">Prefix:</label>
-    <input type="text" id="prefix">
+    <div id="container" style="margin-left: 30%;">
+        <label for="prefix">Prefix:</label>
+        <input type="text" id="prefix">
 
-    <label for="width">Width:</label>
-    <input type="number" id="width" value="2">
+        <label for="width">Width:</label>
+        <input type="number" id="width" value="2">
 
-    <label for="height">Height:</label>
-    <input type="number" id="height" value="2">
+        <label for="height">Height:</label>
+        <input type="number" id="height" value="2">
 
-    <label for="centerX">Center X:</label>
-    <input type="number" id="centerX" value="1">
+        <label for="centerX">Center X:</label>
+        <input type="number" id="centerX" value="1">
 
-    <label for="centerY">Center Y:</label>
-    <input type="number" id="centerY" value="1">
+        <label for="centerY">Center Y:</label>
+        <input type="number" id="centerY" value="1">
 
-    <label>
-        <input type="checkbox" id="addLinks"> Add level links
-    </label>
+        <label>
+            <input type="checkbox" id="addLinks"> Add level links
+        </label>
 
-    <label>Level Suffix Format:</label>
-    <label>
-        <input type="radio" name="levelFormat" value="numbered" checked> Numbered (00-01)
-    </label>
-    <label>
-        <input type="radio" name="levelFormat" value="lettered"> Lettered (aa-aa)
-    </label>
-    <br />
-    <label for="templateFile">Template File (optional):</label>
-    <input type="file" id="templateFile" accept=".nw">
-    <br /><br />
-    <button id="clearTemplateBtn">Clear Template</button>
-    <button id="generateBtn">Generate</button>
+        <label>Level Suffix Format:</label>
+        <label>
+            <input type="radio" name="levelFormat" value="numbered" checked> Numbered (00-01)
+        </label>
+        <label>
+            <input type="radio" name="levelFormat" value="lettered"> Lettered (aa-aa)
+        </label>
+        <br />
+        <label for="templateFile">Template File (optional):</label>
+        <input type="file" id="templateFile" accept=".nw">
+        <br /><br />
+        <button id="clearTemplateBtn">Clear Template</button>
+        <button id="generateBtn">Generate</button>
 
-    <div id="output" class="output">Click 'Generate' to create your Gmap!</div>
-    <div class="credits">Concept by Crow, updated by Denveous</div>
-
+        <div id="output" class="output">Click 'Generate' to create your Gmap!</div>
+        <div class="credits">Concept by Crow, updated by Denveous</div>
+    </div>
     <script>
         let templateContent = '';
 
