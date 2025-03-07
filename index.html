@@ -139,8 +139,8 @@
                 link.href = URL.createObjectURL(content);
                 link.download = `${prefix}.zip`;
                 link.click();
+                outputDiv.innerHTML = `Gmap created successfully! The files have been zipped and are ready for <a href="${link.href}" download="${link.download}" style="color: limegreen;" alt="Retry download">download</a>.`;
             });
-            outputDiv.innerHTML = 'Gmap created successfully! The files have been zipped and are ready for download.';
         });
         function getCoords(x, y, centerX, centerY, levelFormat) {
             let xs, ys;
