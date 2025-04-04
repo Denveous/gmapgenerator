@@ -11,4 +11,4 @@ This project is based around the initial code from Crow over on the [forums](htt
 
 ---
 
-<img src="gmapgen.png" alt="" width="208" height="234">
+<img src="gmapgen.png" alt="" width="208" height="254">
