@@ -26,7 +26,6 @@ class GmapGen:
         self.lOutput = Label(frame, text='Click "Generate" to create your Gmap!', bg="#1e1e1e", fg="limegreen", width=40, anchor='center')
         self.lOutput.grid(row=8, columnspan=2, pady=4)
         Button(frame, text="Generate", command=self.generate_gmap, bg="#444", fg="white").grid(sticky=N, row=9, column=0, columnspan=2, pady=4)
-        Label(frame, text="Concept by Crow, updated by Denveous", bg="#1e1e1e", fg="white", font=("Arial", 8, "italic")).grid(row=10, columnspan=2, pady=4)
 
     def ClearMsg(self):
         self.lOutput.config(fg="limegreen", text='Click "Generate" to create your Gmap!')
@@ -99,7 +98,7 @@ def load_icon_from_base64(base64_str):
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("275x280")
+    root.geometry("275x260")
     icon_image = load_icon_from_base64(base64_icon)  
     root.wm_iconphoto(False, icon_image)
     root.resizable(False, False)

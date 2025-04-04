@@ -91,18 +91,17 @@
         <button id="generateBtn">Generate</button>
 
         <div id="output" class="output">Click 'Generate' to create your Gmap!</div>
-        <div class="credits">Concept by Crow, updated by Denveous</div>
     </div>
     <script>
         let templateContent = '';
-        document.getElementById('templateFile').addEventListener('change', function (event) { // Store the template content
+        document.getElementById('templateFile').addEventListener('change', function (event) { t
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) { templateContent = e.target.result; }; reader.readAsText(file);
             }
         }); 
-        document.getElementById('clearTemplateBtn').addEventListener('click', function () { document.getElementById('templateFile').value = ''; templateContent = ''; });  // Reset the template content
+        document.getElementById('clearTemplateBtn').addEventListener('click', function () { document.getElementById('templateFile').value = ''; templateContent = ''; });
         document.getElementById('generateBtn').addEventListener('click', function () {
             const prefix = document.getElementById('prefix').value;
             const width = parseInt(document.getElementById('width').value);
@@ -112,7 +111,7 @@
             const addLinks = document.getElementById('addLinks').checked;
             const outputDiv = document.getElementById('output');
             outputDiv.innerHTML = ''; // Clear previous output
-            if (!prefix || isNaN(width) || isNaN(height) || isNaN(centerX) || isNaN(centerY)) { // Validate inputs (the lazy way)
+            if (!prefix || isNaN(width) || isNaN(height) || isNaN(centerX) || isNaN(centerY)) {
                 outputDiv.innerHTML = '<span class="error">Please enter valid numeric values and a prefix.</span>';
                 return;
             }
@@ -120,21 +119,21 @@
                 outputDiv.innerHTML = '<span class="error">The specified map size is too small!</span>';
                 return;
             }
-            let gmapContent = `GRMAP001\nWIDTH ${width}\nHEIGHT ${height}\nLEVELNAMES\n`; // Prepare the GMAP file content (.gmap headers)
+            let gmapContent = `GRMAP001\nWIDTH ${width}\nHEIGHT ${height}\nLEVELNAMES\n`;
             const zip = new JSZip();            
-            const levelFormat = document.querySelector('input[name="levelFormat"]:checked').value; // Determine the selected level naming format
-            for (let y = 0; y < height; y++) { // Create levels
+            const levelFormat = document.querySelector('input[name="levelFormat"]:checked').value; 
+            for (let y = 0; y < height; y++) { 
                 for (let x = 0; x < width; x++) {
                     const levelName = `${prefix}_${getCoords(x + 1, y + 1, centerX, centerY, levelFormat)}.nw`;
                     gmapContent += `"${levelName}"${(x < width - 1 ? "," : "")}`;
-                    const levelContent = getLevelContent(x + 1, y + 1, addLinks, prefix, centerX, centerY, templateContent); // Create the level content (e.g. pull template or default)
-                    zip.file(levelName, levelContent); // Add level file to zip
+                    const levelContent = getLevelContent(x + 1, y + 1, addLinks, prefix, centerX, centerY, templateContent); 
+                    zip.file(levelName, levelContent); 
                 }
                 gmapContent += "\n";
             }           
-            gmapContent += "LEVELNAMESEND\n";  // Finish the GMAP file (.gmpp footer)
-            zip.file(`${prefix}.gmap`, gmapContent); // Add GMAP file to zip
-            zip.generateAsync({ type: "blob" }).then(function (content) { // Generate the zip file and trigger download
+            gmapContent += "LEVELNAMESEND\n";  
+            zip.file(`${prefix}.gmap`, gmapContent); 
+            zip.generateAsync({ type: "blob" }).then(function (content) { 
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
                 link.download = `${prefix}.zip`;
@@ -162,8 +161,8 @@
         }
         function getLevelContent(x, y, addLinks, prefix, centerX, centerY, templateContent) {
             let levelContent = `GLEVNW01\n`;
-            if (templateContent) { // If a template is provided, use it; otherwise, generate default content
-                levelContent += templateContent; // Use the template content
+            if (templateContent) { 
+                levelContent += templateContent; 
             } else {
                 const fValues = 'f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/f/';
                 for (let i = 0; i < 64; i++) {
